@@ -28,7 +28,9 @@ func fetchGitHubRepos(input string) tea.Cmd {
 		client := github.NewClient(tc)
 
 		opts := &github.RepositoryListOptions{
-			ListOptions: github.ListOptions{PerPage: 5},
+			Sort:        "updated",
+			Direction:   "desc",
+			ListOptions: github.ListOptions{PerPage: 10},
 		}
 
 		githubRepos, _, err := client.Repositories.List(ctx, "", opts)

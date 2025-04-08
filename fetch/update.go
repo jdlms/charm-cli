@@ -30,6 +30,7 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
+
 		case "enter":
 			if m.tokenInput.Value() != "" {
 				m.loading = true
@@ -40,15 +41,25 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		}
 		return m, cmd
 	}
+	if m.currentView == resultsView {
+		switch msg.String() {
+		case "ctrl+c", "q":
+			return m, tea.Quit
 
-	switch msg.String() {
-	case "ctrl+c", "q":
-		return m, tea.Quit
-	case "b":
-		if m.currentView == resultsView {
-			m.currentView = inputView
+		case "up", "k":
+			if m.cursor > 0 {
+				m.cursor--
+			}
+		case "down", "j":
+			if m.cursor < len(m.repos)-1 {
+				m.cursor++
+			}
+
+		case "b":
+			if m.currentView == resultsView {
+				m.currentView = inputView
+			}
 		}
 	}
-
 	return m, nil
 }

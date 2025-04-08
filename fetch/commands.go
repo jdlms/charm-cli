@@ -27,7 +27,11 @@ func fetchGitHubRepos(input string) tea.Cmd {
 
 		client := github.NewClient(tc)
 
-		githubRepos, _, err := client.Repositories.List(ctx, "", nil)
+		opts := &github.RepositoryListOptions{
+			ListOptions: github.ListOptions{PerPage: 5},
+		}
+
+		githubRepos, _, err := client.Repositories.List(ctx, "", opts)
 		if err != nil {
 			return fetchResultMsg{nil, fmt.Errorf("github API returned error: %s", err)}
 		}

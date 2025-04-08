@@ -33,7 +33,7 @@ func (m model) inputView() string {
 }
 
 func (m model) resultsView() string {
-	s := fmt.Sprintf("Your current repositories")
+	s := "Your current repositories:\n\n"
 
 	if len(m.repos) == 0 {
 		s += "No repositories found.\n"
@@ -44,7 +44,16 @@ func (m model) resultsView() string {
 				desc = "(No description)"
 			}
 
-			s += fmt.Sprintf("%d. %s\n", i+1, repo.Name)
+			cursor := " "
+			if m.cursor == i {
+				cursor = ">"
+			}
+			checked := " "
+			if _, ok := m.selected[i]; ok {
+				checked = "x"
+			}
+
+			s += fmt.Sprintf("%s [%s] %d. %s\n", cursor, checked, i+1, repo.Name)
 			s += fmt.Sprintf("   %s\n", desc)
 			s += fmt.Sprintf("   %s\n\n", repo.URL)
 		}

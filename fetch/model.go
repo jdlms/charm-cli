@@ -10,7 +10,7 @@ type model struct {
 	tokenInput   textinput.Model
 	cursor       int
 	repos        []repository
-	selected     map[int]struct{}
+	selected     map[int]repository
 	loading      bool
 	errorMessage string
 	currentView  view
@@ -38,7 +38,7 @@ func initialModel() model {
 	return model{
 		tokenInput:  ti,
 		repos:       []repository{},
-		selected:    make(map[int]struct{}),
+		selected:    make(map[int]repository),
 		currentView: inputView,
 	}
 }

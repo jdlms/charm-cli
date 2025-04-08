@@ -54,6 +54,13 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			if m.cursor < len(m.repos)-1 {
 				m.cursor++
 			}
+		case "enter", " ":
+			_, ok := m.selected[m.cursor]
+			if ok {
+				delete(m.selected, m.cursor)
+			} else {
+				m.selected[m.cursor] = m.repos[m.cursor]
+			}
 
 		case "b":
 			if m.currentView == resultsView {

@@ -16,7 +16,6 @@ type fetchResultMsg struct {
 
 func fetchGitHubRepos(input string) tea.Cmd {
 	return func() tea.Msg {
-		// Extract username from URL or use input as username
 		token := input
 
 		ctx := context.Background()

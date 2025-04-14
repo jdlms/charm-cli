@@ -27,6 +27,7 @@ type view int
 const (
 	inputView view = iota
 	resultsView
+	selectedView
 )
 
 func initialModel() model {

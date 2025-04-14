@@ -10,6 +10,8 @@ func (m model) View() string {
 		return m.inputView()
 	case resultsView:
 		return m.resultsView()
+	case selectedView:
+		return m.selectedView()
 	default:
 		return ""
 	}
@@ -59,6 +61,13 @@ func (m model) resultsView() string {
 		}
 	}
 
+	s += "\nPress s to select, b to go back, q to quit.\n"
+	return s
+}
+
+func (m model) selectedView() string {
+	s := "This is the selectedView"
 	s += "\nPress b to go back, q to quit.\n"
+
 	return s
 }

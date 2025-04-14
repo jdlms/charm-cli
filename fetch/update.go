@@ -66,7 +66,23 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			if m.currentView == resultsView {
 				m.currentView = inputView
 			}
+		case "s":
+			if m.currentView == resultsView {
+				m.currentView = selectedView
+			}
 		}
+	}
+	if m.currentView == selectedView {
+		switch msg.String() {
+		case "ctrl+c", "q":
+			return m, tea.Quit
+
+		case "b":
+			if m.currentView == selectedView {
+				m.currentView = resultsView
+			}
+		}
+
 	}
 	return m, nil
 }

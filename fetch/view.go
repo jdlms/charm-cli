@@ -52,7 +52,7 @@ func (m model) resultsView() string {
 				cursor = ">"
 			}
 			checked := " "
-			if _, ok := m.selected[repo.ID]; ok {
+			if _, ok := m.selected[repo.ID-1]; ok {
 				checked = "x"
 			}
 
@@ -61,9 +61,9 @@ func (m model) resultsView() string {
 			s += fmt.Sprintf("   %s\n\n", repo.URL)
 		}
 	}
-
 	// d to delete, l & n to page through,
-	s += "\nPress s to select, b to go back, q to quit.\n"
+	s += m.username
+	s += "\nPress s to select, l + n to page, b to go back, q to quit.\n"
 	return s
 }
 

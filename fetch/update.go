@@ -16,6 +16,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		} else {
 			m.chunks = msg.chunks
 			m.currentView = resultsView
+			m.username = msg.username
 		}
 		return m, nil
 	}
@@ -51,7 +52,7 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.cursor--
 			}
 		case "down", "j":
-			if m.cursor < len(m.chunks[m.reposPage])-1 {
+			if m.cursor < len(m.chunks[m.reposPage]) {
 				m.cursor++
 			}
 		case "enter", " ":
@@ -64,14 +65,22 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			if _, ok := m.selected[repo.ID]; ok {
 				delete(m.selected, repo.ID)
 			} else {
-				m.selected[repo.ID] = repo
+				m.selected[repo.ID-1] = repo
 			}
 		case "h", "left":
-			m.reposPage--
-			m.cursor = 0
+			if m.reposPage > 0 {
+				m.reposPage--
+				m.cursor = 0
+			} else {
+				break
+			}
 		case "l", "right":
-			m.reposPage++
-			m.cursor = 0
+			if m.reposPage < len(m.chunks)-1 {
+				m.reposPage++
+				m.cursor = 0
+			} else {
+				break
+			}
 		case "b":
 			if m.currentView == resultsView {
 				m.currentView = inputView
@@ -79,6 +88,8 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		case "s":
 			if m.currentView == resultsView {
 				m.currentView = selectedView
+			} else {
+				break
 			}
 		}
 	}

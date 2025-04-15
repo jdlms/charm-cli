@@ -10,9 +10,9 @@ import (
 )
 
 type fetchResultMsg struct {
-	repos  []repository
-	chunks map[int][]repository
-	err    error
+	username string
+	chunks   map[int][]repository
+	err      error
 }
 
 func fetchGitHubRepos(m model) tea.Cmd {
@@ -27,6 +27,13 @@ func fetchGitHubRepos(m model) tea.Cmd {
 
 		client := github.NewClient(tc)
 
+		// get and set username
+		user, _, err := client.Users.Get(ctx, "")
+		if err != nil {
+			return fetchResultMsg{"", nil, fmt.Errorf("failed to get authenticated user: %s", err)}
+		}
+		username := *user.Login
+
 		opts := &github.RepositoryListOptions{
 			Sort:        "updated",
 			Direction:   "desc",
@@ -35,7 +42,7 @@ func fetchGitHubRepos(m model) tea.Cmd {
 
 		githubRepos, _, err := client.Repositories.List(ctx, "", opts)
 		if err != nil {
-			return fetchResultMsg{nil, nil, fmt.Errorf("github API returned error: %s", err)}
+			return fetchResultMsg{"", nil, fmt.Errorf("github API returned error: %s", err)}
 		}
 
 		repos := make([]repository, len(githubRepos))
@@ -43,7 +50,7 @@ func fetchGitHubRepos(m model) tea.Cmd {
 
 		for i, repo := range githubRepos {
 			r := repository{
-				ID:   i,
+				ID:   i + 1,
 				Name: *repo.Name,
 				URL:  *repo.HTMLURL,
 			}
@@ -56,9 +63,6 @@ func fetchGitHubRepos(m model) tea.Cmd {
 			chunks[chunkIndex] = append(chunks[chunkIndex], r)
 		}
 
-		m.repos = repos
-		m.chunks = chunks
-
-		return fetchResultMsg{repos, chunks, nil}
+		return fetchResultMsg{username, chunks, nil}
 	}
 }

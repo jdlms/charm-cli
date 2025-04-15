@@ -8,8 +8,8 @@ import (
 type model struct {
 	input        string
 	tokenInput   textinput.Model
+	username     string
 	cursor       int
-	repos        []repository
 	reposPage    int
 	selected     map[int]repository
 	chunks       map[int][]repository
@@ -41,10 +41,10 @@ func initialModel() model {
 
 	return model{
 		tokenInput:  ti,
-		repos:       []repository{},
 		selected:    make(map[int]repository),
 		chunks:      make(map[int][]repository),
 		currentView: inputView,
+		cursor:      0,
 	}
 }
 

@@ -38,7 +38,7 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.input = m.tokenInput.Value()
 				return m, fetchGitHubRepos(m)
 			}
-		case "b":
+
 		}
 		return m, cmd
 	}
@@ -97,7 +97,16 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "q":
 			return m, tea.Quit
-
+		case "d":
+			if m.currentView == selectedView {
+				if m.tokenInput.Value() != "" {
+					m.loading = true
+					m.input = m.tokenInput.Value()
+					return m, deleteGitHubRepos(m)
+				}
+			} else {
+				break
+			}
 		case "b":
 			if m.currentView == selectedView {
 				m.currentView = resultsView

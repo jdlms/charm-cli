@@ -62,7 +62,6 @@ func (m model) resultsView() string {
 		}
 	}
 	// d to delete, l & n to page through,
-	s += m.username
 	s += "\nPress s to select, l + n to page, b to go back, q to quit.\n"
 	return s
 }

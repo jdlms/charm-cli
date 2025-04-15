@@ -15,6 +15,11 @@ type fetchResultMsg struct {
 	err      error
 }
 
+type deleteResultMsg struct {
+	message string
+	err     error
+}
+
 func fetchGitHubRepos(m model) tea.Cmd {
 	return func() tea.Msg {
 		token := m.input
@@ -64,5 +69,41 @@ func fetchGitHubRepos(m model) tea.Cmd {
 		}
 
 		return fetchResultMsg{username, chunks, nil}
+	}
+}
+
+func deleteGitHubRepos(m model) tea.Cmd {
+	return func() tea.Msg {
+		token := m.input
+
+		ctx := context.Background()
+		ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: token})
+		tc := oauth2.NewClient(ctx, ts)
+		client := github.NewClient(tc)
+
+		var failed []string
+
+		for _, repo := range m.selected {
+			// You *must* know the owner here — either grab it from repo info or hardcode if it's always you
+			owner := m.username // Replace this or store it in the model
+			name := repo.Name
+
+			_, err := client.Repositories.Delete(ctx, owner, name)
+			if err != nil {
+				failed = append(failed, name)
+			}
+		}
+
+		if len(failed) > 0 {
+			return deleteResultMsg{
+				message: fmt.Sprintf("Some repos failed to delete: %v", failed),
+				err:     fmt.Errorf("delete failed"),
+			}
+		}
+
+		return deleteResultMsg{
+			message: "All selected repos deleted successfully",
+			err:     nil,
+		}
 	}
 }

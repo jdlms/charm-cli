@@ -84,8 +84,7 @@ func deleteGitHubRepos(m model) tea.Cmd {
 		var failed []string
 
 		for _, repo := range m.selected {
-			// You *must* know the owner here — either grab it from repo info or hardcode if it's always you
-			owner := m.username // Replace this or store it in the model
+			owner := m.username
 			name := repo.Name
 
 			_, err := client.Repositories.Delete(ctx, owner, name)

@@ -61,7 +61,7 @@ func (m model) resultsView() string {
 			s += fmt.Sprintf("   %s\n\n", repo.URL)
 		}
 	}
-	// d to delete, l & n to page through,
+
 	s += "\nPress s to select, l + n to page, b to go back, q to quit.\n"
 	return s
 }
@@ -79,7 +79,6 @@ func (m model) selectedView() string {
 			s += fmt.Sprintf("[x] %d. %s\n", i+1, repo.Name)
 			s += fmt.Sprintf("   %s\n", desc)
 			s += fmt.Sprintf("   %s\n\n", repo.URL)
-
 		}
 	}
 
@@ -93,6 +92,5 @@ func (m model) selectedView() string {
 	} else {
 		s += "\nPress d to delete, b to go back, q to quit.\n"
 	}
-
 	return s
 }

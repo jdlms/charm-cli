@@ -10,13 +10,14 @@ import (
 )
 
 type fetchResultMsg struct {
-	repos []repository
-	err   error
+	repos  []repository
+	chunks map[int][]repository
+	err    error
 }
 
-func fetchGitHubRepos(input string) tea.Cmd {
+func fetchGitHubRepos(m model) tea.Cmd {
 	return func() tea.Msg {
-		token := input
+		token := m.input
 
 		ctx := context.Background()
 		ts := oauth2.StaticTokenSource(
@@ -29,27 +30,35 @@ func fetchGitHubRepos(input string) tea.Cmd {
 		opts := &github.RepositoryListOptions{
 			Sort:        "updated",
 			Direction:   "desc",
-			ListOptions: github.ListOptions{PerPage: 10},
+			ListOptions: github.ListOptions{PerPage: 100},
 		}
 
 		githubRepos, _, err := client.Repositories.List(ctx, "", opts)
 		if err != nil {
-			return fetchResultMsg{nil, fmt.Errorf("github API returned error: %s", err)}
+			return fetchResultMsg{nil, nil, fmt.Errorf("github API returned error: %s", err)}
 		}
 
-		// Convert to our repository model
 		repos := make([]repository, len(githubRepos))
+		chunks := make(map[int][]repository)
+
 		for i, repo := range githubRepos {
 			r := repository{
+				ID:   i,
 				Name: *repo.Name,
 				URL:  *repo.HTMLURL,
 			}
 			if repo.Description != nil {
 				r.Description = *repo.Description
 			}
+
 			repos[i] = r
+			chunkIndex := i / 10
+			chunks[chunkIndex] = append(chunks[chunkIndex], r)
 		}
 
-		return fetchResultMsg{repos, nil}
+		m.repos = repos
+		m.chunks = chunks
+
+		return fetchResultMsg{repos, chunks, nil}
 	}
 }

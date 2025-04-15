@@ -10,13 +10,16 @@ type model struct {
 	tokenInput   textinput.Model
 	cursor       int
 	repos        []repository
+	reposPage    int
 	selected     map[int]repository
+	chunks       map[int][]repository
 	loading      bool
 	errorMessage string
 	currentView  view
 }
 
 type repository struct {
+	ID          int
 	Name        string
 	Description string
 	URL         string
@@ -40,6 +43,7 @@ func initialModel() model {
 		tokenInput:  ti,
 		repos:       []repository{},
 		selected:    make(map[int]repository),
+		chunks:      make(map[int][]repository),
 		currentView: inputView,
 	}
 }

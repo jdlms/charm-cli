@@ -14,7 +14,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		if msg.err != nil {
 			m.errorMessage = msg.err.Error()
 		} else {
-			m.repos = msg.repos
+			m.chunks = msg.chunks
 			m.currentView = resultsView
 		}
 		return m, nil
@@ -35,7 +35,7 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 			if m.tokenInput.Value() != "" {
 				m.loading = true
 				m.input = m.tokenInput.Value()
-				return m, fetchGitHubRepos(m.input)
+				return m, fetchGitHubRepos(m)
 			}
 		case "b":
 		}
@@ -51,17 +51,27 @@ func (m model) handleKeyMsg(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 				m.cursor--
 			}
 		case "down", "j":
-			if m.cursor < len(m.repos)-1 {
+			if m.cursor < len(m.chunks[m.reposPage])-1 {
 				m.cursor++
 			}
 		case "enter", " ":
-			_, ok := m.selected[m.cursor]
-			if ok {
-				delete(m.selected, m.cursor)
-			} else {
-				m.selected[m.cursor] = m.repos[m.cursor]
+			currentChunk := m.chunks[m.reposPage]
+			if m.cursor >= len(currentChunk) {
+				break
 			}
+			repo := currentChunk[m.cursor]
 
+			if _, ok := m.selected[repo.ID]; ok {
+				delete(m.selected, repo.ID)
+			} else {
+				m.selected[repo.ID] = repo
+			}
+		case "h", "left":
+			m.reposPage--
+			m.cursor = 0
+		case "l", "right":
+			m.reposPage++
+			m.cursor = 0
 		case "b":
 			if m.currentView == resultsView {
 				m.currentView = inputView

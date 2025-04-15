@@ -19,6 +19,13 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.username = msg.username
 		}
 		return m, nil
+	case deleteResultMsg:
+		if msg.err != nil {
+			m.errorMessage = msg.message
+		} else {
+			m.successMessage = msg.message
+		}
+
 	}
 	return m, nil
 }

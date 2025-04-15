@@ -83,7 +83,16 @@ func (m model) selectedView() string {
 		}
 	}
 
-	s += "\nPress d to delete, b to go back, q to quit.\n"
+	if m.errorMessage != "" {
+		s += m.errorMessage
+		s += "\nPress q to quit.\n"
+	}
+	if m.successMessage != "" {
+		s += m.successMessage
+		s += "\nPress q to quit.\n"
+	} else {
+		s += "\nPress d to delete, b to go back, q to quit.\n"
+	}
 
 	return s
 }

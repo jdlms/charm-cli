@@ -6,16 +6,17 @@ import (
 )
 
 type model struct {
-	input        string
-	tokenInput   textinput.Model
-	username     string
-	cursor       int
-	reposPage    int
-	selected     map[int]repository
-	chunks       map[int][]repository
-	loading      bool
-	errorMessage string
-	currentView  view
+	input          string
+	tokenInput     textinput.Model
+	username       string
+	cursor         int
+	reposPage      int
+	selected       map[int]repository
+	chunks         map[int][]repository
+	loading        bool
+	errorMessage   string
+	successMessage string
+	currentView    view
 }
 
 type repository struct {

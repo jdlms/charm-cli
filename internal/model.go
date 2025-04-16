@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"github.com/charmbracelet/bubbles/textinput"
@@ -34,7 +34,7 @@ const (
 	selectedView
 )
 
-func initialModel() model {
+func InitialModel() model {
 	ti := textinput.New()
 	ti.Placeholder = "Enter your Github auth token"
 	ti.EchoMode = textinput.EchoPassword

@@ -64,7 +64,7 @@ func fetchGitHubRepos(m model) tea.Cmd {
 			}
 
 			repos[i] = r
-			chunkIndex := i / 10
+			chunkIndex := i / 5
 			chunks[chunkIndex] = append(chunks[chunkIndex], r)
 		}
 

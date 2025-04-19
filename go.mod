@@ -1,4 +1,4 @@
-module charm
+module nuke
 
 go 1.24.1
 
